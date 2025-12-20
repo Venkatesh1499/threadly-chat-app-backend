@@ -1,8 +1,7 @@
-import psycopg2
 from flask import Flask, request, jsonify, Blueprint, abort
+import psycopg2
 from psycopg2 import errors
 from DATABASE import get_db_connection
-
 
 auth_bp = Blueprint("auth", __name__)
 

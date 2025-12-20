@@ -64,6 +64,7 @@ def register():
         'username': username
     }), 201
 
+
 # MARK: - User login
 
 @auth_bp.route('/users', methods=['GET'])
@@ -75,6 +76,9 @@ def users():
         'SELECT id, username in users'
     )
 
+    cursor.close()
+    conn.close()
+
     rows = cursor.fetchall()
 
     users_list = []
@@ -84,7 +88,8 @@ def users():
             'username': row[1]
         })
     
-    rows
+    return jsonify(users_list)
+
 
 # MARK: - Error handling
 

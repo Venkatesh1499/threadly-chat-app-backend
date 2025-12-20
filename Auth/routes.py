@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, Blueprint, abort
 import psycopg2
+from psycopg2.extras import RealDictCursor
 from psycopg2 import errors
 from DATABASE import get_db_connection
 
@@ -123,23 +124,24 @@ def login():
 @auth_bp.route('/users', methods=['GET'])
 def users():
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute(
         'SELECT id, username FROM users'
     )
 
-    rows = cursor.fetchall()
+    users = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    users = []
-    for row in rows:
-        users.append({
-            "id": row[0],
-            "username": row[1]
-        })
+    #if you are using the RealDictCursor then , it will automatically covert the result into list of dicts
+    # users = []
+    # for row in rows:
+    #     users.append({
+    #         "id": row[0],
+    #         "username": row[1]
+    #     })
     
     return jsonify(users), 200
 

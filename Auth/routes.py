@@ -106,14 +106,14 @@ def login():
 
     try:
         cursor.execute(
-            'SELECT password FROM users WHERE username = %s ', (username)
+            'SELECT password FROM users WHERE username = %s ', (username,)
         )
         user = cursor.fetchone()
     finally:
         cursor.close()
         conn.close()
     
-    if user[0] == password:
+    if user and user[0] == password:
         return jsonify({"message": "Login successful"}), 200
     return jsonify({"error": "Invalid credentials"}), 401
 

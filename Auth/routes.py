@@ -7,6 +7,10 @@ auth_bp = Blueprint("auth", __name__)
 
 # MARK: - Table creation
 
+@auth_bp.route("/", methods=["GET"])
+def home():
+    return jsonify({"message": "Hey, welcome"})
+
 def create_table():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -25,17 +29,31 @@ def create_table():
 
 create_table()
 
+def delete_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        'DROP TABLE users'
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+# delete_table()
+
 # MARK: - User registration 
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
     input = request.get_json()
 
-    username = input.get("username")
-    password = input.get("password")
-
     if not input:
         abort(400)
+
+    username = input.get("username")
+    password = input.get("password")
     
     if not username:
         abort(400, "username is missing")
@@ -50,7 +68,7 @@ def register():
         cursor.execute(
             'INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id', (username, password)
             )
-        user_id = cursor.fetchall[0]
+        user_id = cursor.fetchone()[0]
         conn.commit()
     except psycopg2.errors.UniqueViolation:
         conn.rollback()
@@ -73,22 +91,22 @@ def users():
     cursor = conn.cursor()
 
     cursor.execute(
-        'SELECT id, username in users'
+        'SELECT id, username FROM users'
     )
+
+    rows = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    rows = cursor.fetchall()
-
-    users_list = []
+    users = []
     for row in rows:
-        users_list.append({
-            'id': row[0],
-            'username': row[1]
+        users.append({
+            "id": row[0],
+            "username": row[1]
         })
     
-    return jsonify(users_list)
+    return jsonify(users), 200
 
 
 # MARK: - Error handling
@@ -103,5 +121,4 @@ def handle_400(e):
 
 @auth_bp.errorhandler(Exception)
 def handle_exception(e):
-    auth_bp.logger.error(e)
     return jsonify({"error": "Internal server error"}), 500

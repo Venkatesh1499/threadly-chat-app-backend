@@ -3,10 +3,9 @@ import psycopg2
 from psycopg2 import errors
 from DATABASE import get_db_connection
 
-
 auth_bp = Blueprint("auth", __name__)
 
-create_table()
+# MARK: - Table creation
 
 def create_table():
     conn = get_db_connection()
@@ -24,6 +23,75 @@ def create_table():
     cursor.close()
     conn.close()
 
+create_table()
+
+# MARK: - User registration 
+
+@auth_bp.route('/register', methods=['POST'])
+def register():
+    input = request.get_json()
+
+    username = input.get("username")
+    password = input.get("password")
+
+    if not input:
+        abort(400)
+    
+    if not username:
+        abort(400, "username is missing")
+    
+    if not password:
+        abort(400, "password is missing")
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            'INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id', (username, password)
+            )
+        user_id = cursor.fetchall[0]
+        conn.commit()
+    except psycopg2.errors.UniqueViolation:
+        conn.rollback()
+        return jsonify({"error": "Username already taken"}), 400
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return jsonify({
+        'id': user_id,
+        'username': username
+    }), 201
+
+
+# MARK: - User login
+
+@auth_bp.route('/users', methods=['GET'])
+def users():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        'SELECT id, username in users'
+    )
+
+    cursor.close()
+    conn.close()
+
+    rows = cursor.fetchall()
+
+    users_list = []
+    for row in rows:
+        users_list.append({
+            'id': row[0],
+            'username': row[1]
+        })
+    
+    return jsonify(users_list)
+
+
+# MARK: - Error handling
 
 @auth_bp.errorhandler(404)
 def handle_404(e):

@@ -83,7 +83,42 @@ def register():
     }), 201
 
 
-# MARK: - User login
+# MARK : - User login
+
+@auth_bp.route('/login', methods=['POST'])
+def login():
+    input = request.get_json()
+
+    if not input:
+        abort(400)
+    
+    username = input.get("username")
+    password = input.get("password")
+
+    if not username:
+        abort(400, "username is missing")
+    
+    if not password:
+        abort(400, "password is missing")
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            'SELECT password FROM users WHERE username = %s ', (username,)
+        )
+        user = cursor.fetchone()
+    finally:
+        cursor.close()
+        conn.close()
+    
+    if user and user[0] == password:
+        return jsonify({"message": "Login successful"}), 200
+    return jsonify({"error": "Invalid credentials"}), 401
+
+
+# MARK: - Fetch users
 
 @auth_bp.route('/users', methods=['GET'])
 def users():

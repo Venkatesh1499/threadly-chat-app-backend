@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, Blueprint, abort
 from psycopg2 import errors
 from psycopg2.extras import RealDictCursor
 import psycopg2
+import uuid
 from DATABASE import get_db_connection
 
 # Adding blueprint
@@ -42,6 +43,116 @@ def search_users():
     return jsonify(users), 200
 
 
+# MARK: - create connection_requests table
+
+def connection_requests_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        '''CREATE TABLE IF NOT EXISTS connection_requests (
+        id SERIAL PRIMARY KEY,
+        primary_id UUID NOT NULL,
+        secondary_id UUID NOT NULL,
+        primary_name VARCHAR(100) NOT NULL,
+        secondary_name VARCHAR(100) NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+        )
+        ''')
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def delete_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        'DROP TABLE connection_requests'
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+# delete_table()
+
+connection_requests_table()
+
+# MARK: - Inititate connection request
+
+@user_requests_db.route('/connection-request', methods=["POST"])
+def send_connection_request():
+    input = request.get_json()
+
+    if not input:
+        abort(400)
+
+    primary_id = input.get("primary_id")
+    secondary_id = input.get("secondary_id")
+    primary_name = input.get("primary_name")
+    secondary_name = input.get("secondary_name")
+
+    if not primary_id:
+        abort(400, "primary_id is missing")
+
+    if not secondary_id:
+        abort(400, "secondary_id is missing")
+
+    if not primary_name:
+        abort(400, "primary_name is missing")
+    
+    if not secondary_name:
+        abort(400, "secondary_name is missing")
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            'INSERT INTO connection_requests (primary_id, secondary_id, primary_name, secondary_name) VALUES (%s, %s, %s, %s) RETURNING id', (primary_id, secondary_id, primary_name, secondary_name)
+            )
+        #user_id = cursor.fetchone()[0]
+        conn.commit()
+    except psycopg2.errors.UniqueViolation:
+        cursor.close()
+        conn.close()
+        return jsonify({"message": f"You have already sent connection request to {secondary_name}."}), 409
+    finally:
+        cursor.close()
+        conn.close()
+    
+    return jsonify({
+        "message": f"Connection request sent successfully to {secondary_name}."
+    }), 201
+
+
+# MARK: - get connections list
+
+@user_requests_db.route('/pending-connection-requests', methods=['POST'])
+def get_connection_requests():
+    input = request.get_json()
+
+    if not input:
+        abort(400)
+    
+    my_id = input.get("user_id")
+
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+
+    cursor.execute(
+        'SELECT * FROM connection_requests WHERE secondary_id = %s', (my_id,)
+    )
+    requests = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+
+    return jsonify(requests)
+
+
 # MARK: - Error handling
 
 @user_requests_db.errorhandler(404)
@@ -54,4 +165,5 @@ def handle_400(e):
 
 @user_requests_db.errorhandler(Exception)
 def handle_exception(e):
+    print(e)
     return jsonify({"error": "Internal server error"}), 500

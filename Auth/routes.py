@@ -16,12 +16,13 @@ def create_table():
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    cursor.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
-                   id SERIAL PRIMARY KEY,
+                   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                    username VARCHAR(100) UNIQUE NOT NULL,
                    password VARCHAR(250) NOT NULL
-                   )
+                   );
                    ''')
     
     conn.commit()

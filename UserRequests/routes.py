@@ -113,7 +113,7 @@ def send_connection_request():
 
     try:
         cursor.execute(
-            'INSERT INTO connection_requests (id, primary_id, secondary_id, primary_name, secondary_name) VALUES (%s, %s, %s, %s) RETURNING id', (common_id, primary_id, secondary_id, primary_name, secondary_name)
+            'INSERT INTO connection_requests (id, primary_id, secondary_id, primary_name, secondary_name) VALUES (%s, %s, %s, %s, %s) RETURNING id', (common_id, primary_id, secondary_id, primary_name, secondary_name)
             )
         conn.commit()
     except psycopg2.errors.UniqueViolation:

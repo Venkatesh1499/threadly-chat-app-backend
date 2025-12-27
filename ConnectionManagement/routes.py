@@ -18,6 +18,7 @@ def action_on_request():
     if not input:
         abort(400)
 
+    connection_id = input.get("connection_id")
     primary_id = input.get("primary_id")
     secondary_id = input.get("secondary_id")
     primary_name = input.get("primary_name")
@@ -49,7 +50,7 @@ def action_on_request():
         cursor.close()
         conn.close()
 
-        common_id = f"{primary_id}_{secondary_id}"
+        common_id = connection_id if connection_id else f"{primary_id}_{secondary_id}"
         
         if action == "ACCEPT":
             details = connectionDetails(

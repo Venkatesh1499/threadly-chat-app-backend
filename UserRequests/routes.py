@@ -51,7 +51,7 @@ def connection_requests_table():
 
     cursor.execute(
         '''CREATE TABLE IF NOT EXISTS connection_requests (
-        id SERIAL PRIMARY KEY,
+        id VARCHAR(300) UNIQUE NOT NULL,
         primary_id UUID NOT NULL,
         secondary_id UUID NOT NULL,
         primary_name VARCHAR(100) NOT NULL,
@@ -76,7 +76,7 @@ def delete_table():
     cursor.close()
     conn.close()
 
-# delete_table()
+delete_table()
 
 connection_requests_table()
 
@@ -109,11 +109,12 @@ def send_connection_request():
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    common_id = f"{primary_id}_{secondary_id}"
+
     try:
         cursor.execute(
-            'INSERT INTO connection_requests (primary_id, secondary_id, primary_name, secondary_name) VALUES (%s, %s, %s, %s) RETURNING id', (primary_id, secondary_id, primary_name, secondary_name)
+            'INSERT INTO connection_requests (id, primary_id, secondary_id, primary_name, secondary_name) VALUES (%s, %s, %s, %s) RETURNING id', (common_id, primary_id, secondary_id, primary_name, secondary_name)
             )
-        #user_id = cursor.fetchone()[0]
         conn.commit()
     except psycopg2.errors.UniqueViolation:
         cursor.close()

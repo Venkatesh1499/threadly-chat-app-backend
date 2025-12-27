@@ -76,9 +76,9 @@ def delete_table():
     cursor.close()
     conn.close()
 
-# delete_table()
+delete_table()
 
-connection_requests_table()
+# connection_requests_table()
 
 # MARK: - Inititate connection request
 

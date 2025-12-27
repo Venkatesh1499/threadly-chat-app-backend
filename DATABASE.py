@@ -11,7 +11,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # DATABASE_URL = os.environ.get("DATABASE_URL")
 # DATABASE_URL = "postgresql://flask_demo_u6e7_user:dkcTI4popHDtCamz2rDjcBxaAYOCNwKj@dpg-d5260sh5pdvs73c9leug-a/flask_demo_u6e7"
-# result = urlparse(DATABASE_URL)
+result = urlparse(DATABASE_URL)
 
 def get_db_connection():
     # return psycopg2.connect(

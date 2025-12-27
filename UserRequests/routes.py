@@ -144,7 +144,7 @@ def get_connection_requests():
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute(
-        'SELECT * FROM connection_requests WHERE secondary_id = %s', (my_id,)
+        'SELECT * FROM connection_requests WHERE id LIKE %s', (f"%{my_id}%")
     )
     requests = cursor.fetchall()
     

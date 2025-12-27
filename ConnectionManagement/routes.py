@@ -188,4 +188,4 @@ def handle_400(e):
 @connections_management_db.errorhandler(Exception)
 def handle_exception(e):
     print(e)
-    return jsonify({"error": "Internal server error"}), 500
+    return jsonify({"error": f"Internal server error, {e}"}), 500

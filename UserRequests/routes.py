@@ -144,7 +144,7 @@ def get_connection_requests():
     cursor = conn.cursor(cursor_factory=RealDictCursor)
 
     cursor.execute(
-        'SELECT * FROM connection_requests WHERE id LIKE %s', (f"%{my_id}%")
+        'SELECT * FROM connection_requests WHERE id LIKE %s', (f"%{my_id}%",)
     )
     requests = cursor.fetchall()
     
@@ -167,4 +167,4 @@ def handle_400(e):
 @user_requests_db.errorhandler(Exception)
 def handle_exception(e):
     print(e)
-    return jsonify({"error": "Internal server error"}), 500
+    return jsonify({"error": f"Internal server error, {e}"}), 500

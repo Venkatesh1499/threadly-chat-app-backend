@@ -75,8 +75,8 @@ def delete_table():
     conn.commit()
     cursor.close()
     conn.close()
-
-delete_table()
+    
+# delete_table()
 
 connection_requests_table()
 

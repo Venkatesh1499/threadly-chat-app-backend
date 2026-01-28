@@ -1,8 +1,8 @@
-# from flask import jsonify, request, Blueprint
-# from flask_socketio import emit, join_room, leave_room
-# from extensions import socketio
+from flask import jsonify, request, Blueprint
+from flask_socketio import emit, join_room, leave_room
+from extensions import socketio
 
-# chat_bp = Blueprint("Chat", __name__)
+chat_bp = Blueprint("Chat", __name__)
 
 # # ---------- REST API ----------
 # @chat_bp.route("/join", methods=["POST"])

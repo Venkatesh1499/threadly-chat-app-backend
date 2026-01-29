@@ -16,7 +16,6 @@ app.register_blueprint(connections_management_db)
 app.register_blueprint(chat_bp)
 
 app.config['SECERT_KEY'] = "secret123"
-socketio.init_app(app)
 
 socketio = SocketIO(
     app,

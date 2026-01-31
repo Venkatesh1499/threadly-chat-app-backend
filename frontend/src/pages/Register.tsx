@@ -34,7 +34,7 @@ export function Register() {
     try {
       await register(username.trim(), password)
       addToast('Account created. Welcome!', 'success')
-      navigate('/chats', { replace: true })
+      navigate('/requests', { replace: true })
     } catch (err) {
       const apiErr = err as ApiError
       const message = apiErr?.message ?? apiErr?.error ?? 'Registration failed'

@@ -3,10 +3,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { Login } from '@/pages/Login'
 import { Register } from '@/pages/Register'
-import { Search } from '@/pages/Search'
-import { PendingRequests } from '@/pages/PendingRequests'
-import { ActiveChats } from '@/pages/ActiveChats'
-import { ChatRoom } from '@/pages/ChatRoom'
 import { Spinner } from '@/components/ui/Spinner'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -34,7 +30,7 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     )
   }
   if (isAuthenticated) {
-    return <Navigate to="/chats" replace />
+    return <Navigate to="/requests" replace />
   }
   return <>{children}</>
 }
@@ -66,11 +62,11 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="/chats" replace />} />
-        <Route path="search" element={<Search />} />
-        <Route path="requests" element={<PendingRequests />} />
-        <Route path="chats" element={<ActiveChats />} />
-        <Route path="chat/:connectionId" element={<ChatRoom />} />
+        <Route index element={<Navigate to="/requests" replace />} />
+        <Route path="requests" element={null} />
+        <Route path="chats" element={null} />
+        <Route path="search" element={null} />
+        <Route path="chat/:connectionId" element={null} />
       </Route>
       <Route path="*" element={<Navigate to="/register" replace />} />
     </Routes>

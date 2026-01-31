@@ -95,7 +95,7 @@
         .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
         .then(function(result) {
           if (result.ok) {
-            window.location.href = '/chatroom';
+            window.location.href = '/requests';
           } else {
             showErr('err-password', result.data.error || result.data.message || 'Invalid credentials');
           }

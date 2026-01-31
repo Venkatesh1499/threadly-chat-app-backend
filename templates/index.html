@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="Private Chat App - WhatsApp-like interface for private room messaging">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Private Chat App</title>
+    
+    <!-- Socket.IO Client -->
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Entry Screen: Room ID Input -->
+    <div id="entry-screen" class="entry-screen">
+        <h1>💬 Private Chat</h1>
+        <p>Enter a unique room ID to start chatting</p>
+        <input 
+            type="text" 
+            id="room-id-input" 
+            placeholder="Enter Room ID" 
+            autocomplete="off"
+            aria-label="Room ID input"
+            required
+        >
+        <button id="join-button" type="button" aria-label="Join room">
+            Join Room
+        </button>
+    </div>
+
+    <!-- Chat Container -->
+    <div id="chat-container" class="chat-container">
+        <!-- Chat Header -->
+        <header class="chat-header">
+            <div class="room-id-display">
+                <h2>Room:</h2>
+                <span id="room-id-display">-</span>
+            </div>
+        </header>
+
+        <!-- Messages Area -->
+        <div id="messages-container" class="messages-container" role="log" aria-live="polite" aria-label="Chat messages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <textarea 
+                    id="message-input" 
+                    class="chat-input" 
+                    placeholder="Type a message..." 
+                    rows="1"
+                    aria-label="Message input"
+                    disabled
+                ></textarea>
+            </div>
+            <button 
+                id="send-button" 
+                class="send-button" 
+                type="button"
+                aria-label="Send message"
+                disabled
+            >
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

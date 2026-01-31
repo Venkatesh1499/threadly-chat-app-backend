@@ -8,12 +8,12 @@ auth_bp = Blueprint("auth", __name__)
 
 # MARK: - Table creation
 
-@auth_bp.route("/", methods=["GET"])
+# @auth_bp.route("/", methods=["GET"])
 # def home():
 #     return jsonify({"message": "Hey, welcome"})
 
-def home():
-    return render_template("index.html")
+# def home():
+#     return render_template("index.html")
 
 def create_table():
     conn = get_db_connection()

@@ -18,10 +18,10 @@ app.register_blueprint(connections_management_db)
 app.register_blueprint(chat_bp)
 
 app.config['SECERT_KEY'] = "secret123"
-<<<<<<< HEAD
-=======
+# <<<<<<< HEAD
+# =======
 # socketio.init_app(app)
->>>>>>> 022c71c (Fixed issue related to multiple instances)
+# >>>>>>> 022c71c (Fixed issue related to multiple instances)
 
 socketio = SocketIO(
     app,
@@ -53,11 +53,11 @@ def handle_message(data):
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
+# <<<<<<< HEAD
     socketio.run(app, debug=True)
 
-if __name__ == "__main__":
-    socketio.run(debug=True)
-=======
-    socketio.run(app, debug=True)
->>>>>>> 022c71c (Fixed issue related to multiple instances)
+# if __name__ == "__main__":
+#     socketio.run(debug=True)
+# =======
+#     socketio.run(app, debug=True)
+# >>>>>>> 022c71c (Fixed issue related to multiple instances)

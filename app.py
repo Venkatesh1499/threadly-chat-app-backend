@@ -47,7 +47,15 @@ def _serve_react_app(path=""):
 def index():
     if os.path.isdir(REACT_APP_DIR) and os.path.isfile(os.path.join(REACT_APP_DIR, "index.html")):
         return _serve_react_app("index.html")
-    return render_template("index.html")
+    # When React build is not deployed: show Register page first (requirement)
+    return render_template("landing.html")
+
+
+@app.route("/login")
+def login_page():
+    if os.path.isdir(REACT_APP_DIR) and os.path.isfile(os.path.join(REACT_APP_DIR, "index.html")):
+        return _serve_react_app("index.html")
+    return render_template("login.html")
 
 
 @app.route("/chatroom")

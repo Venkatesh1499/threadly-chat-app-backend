@@ -1,11 +1,12 @@
+const BACKEND_BASE = 'https://threadly-chat-app-backend.onrender.com'
+
 /**
- * API base URL. In development with Vite proxy, use /api so requests go to backend.
- * Set VITE_API_URL in .env (e.g. http://localhost:5000) for production or direct backend.
+ * API base URL. Defaults to Render backend; override with VITE_API_URL (e.g. /api for Vite proxy in dev).
  */
 const getBaseUrl = (): string => {
   const url = import.meta.env.VITE_API_URL
   if (url) return url.replace(/\/$/, '')
-  return '/api' // Vite proxy: /api -> backend (see vite.config.ts)
+  return `${BACKEND_BASE}/api`
 }
 
 export const apiBase = getBaseUrl()

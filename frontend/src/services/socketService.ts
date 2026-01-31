@@ -5,10 +5,12 @@
 
 import { io, Socket } from 'socket.io-client'
 
+const BACKEND_BASE = 'https://threadly-chat-app-backend.onrender.com'
+
 const getSocketUrl = (): string => {
   const url = import.meta.env.VITE_SOCKET_URL
   if (url) return url.replace(/\/$/, '')
-  return '' // Same origin
+  return BACKEND_BASE
 }
 
 let socket: Socket | null = null

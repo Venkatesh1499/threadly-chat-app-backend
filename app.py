@@ -35,6 +35,9 @@ def home():
 
 @socketio.on("join_room")
 def handle_join(data):
+    print("HANDLER HIT")
+    print("DATA:", data)
+    print("SID:", request.sid)
     room = data["room"]
     join_room(room)
     emit("room_message", {"message": f"Joined room {room}"}, room = room)

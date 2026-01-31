@@ -90,15 +90,16 @@ export function Register() {
             Sign up
           </Button>
         </form>
-        <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            className="font-medium text-primary-600 hover:underline dark:text-primary-400"
-          >
-            Sign in
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+            Already have an account?
+          </p>
+          <Link to="/login" className="w-full">
+            <Button type="button" variant="outline" fullWidth size="lg">
+              Log in
+            </Button>
           </Link>
-        </p>
+        </div>
       </motion.div>
     </div>
   )

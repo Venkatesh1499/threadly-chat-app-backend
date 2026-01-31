@@ -19,7 +19,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     )
   }
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/register" replace />
   }
   return <>{children}</>
 }
@@ -72,7 +72,7 @@ export default function App() {
         <Route path="chats" element={<ActiveChats />} />
         <Route path="chat/:connectionId" element={<ChatRoom />} />
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/register" replace />} />
     </Routes>
   )
 }

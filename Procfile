@@ -1,1 +1,2 @@
-web: gunicorn app:app
+# Render: uses PORT from environment. Eventlet required for Socket.IO WebSockets.
+web: gunicorn --worker-class eventlet -w 1 -b 0.0.0.0:$PORT app:app

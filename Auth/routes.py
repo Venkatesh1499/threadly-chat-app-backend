@@ -95,7 +95,7 @@ def register():
 
     try:
         cursor.execute(
-            'INSERT INTO users (mobileNumber, password) VALUES (%s, %s) RETURNING id', (mobile_number, password)
+            'INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id', (mobile_number, password)
             )
         user_id = cursor.fetchone()[0]
         conn.commit()

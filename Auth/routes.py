@@ -56,7 +56,7 @@ def create_table():
     cursor.close()
     conn.close()
 
-# create_table()
+create_table()
 
 def delete_table():
     conn = get_db_connection()
@@ -70,7 +70,7 @@ def delete_table():
     cursor.close()
     conn.close()
 
-delete_table()
+# delete_table()
 
 # MARK: - User registration 
 

@@ -3,8 +3,32 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from psycopg2 import errors
 from DATABASE import get_db_connection
+from twilio.rest import Client
+import random
+
+ACCOUNT_SID = "ACd090f0111ea6d039529849601ebb65f4"
+AUTH_TOKEN = "3e4677876b8dc12125e4f39077321891"
+TWILIO_NUMBER = "+12202348733"
 
 auth_bp = Blueprint("auth", __name__)
+
+client = Client(ACCOUNT_SID, AUTH_TOKEN)
+
+# MARK: - Generate OTP
+
+def generate_OTP():
+    return str(random.randint(100000, 999999))
+
+
+# MARK: - Send OTP
+
+def send_otp(mobile, otp):
+    message = client.messages.create(
+        body=f"Hey, welcome to Threadly. Your OTP for registration on Threadly is {otp}. Do not share it.",
+        from_=TWILIO_NUMBER,
+        to=mobile
+    )
+    return message.sid
 
 # MARK: - Table creation
 
@@ -57,11 +81,11 @@ def register():
     if not input:
         abort(400)
 
-    username = input.get("username")
+    mobile_number = input.get("mobileNumber")
     password = input.get("password")
     
-    if not username:
-        abort(400, "username is missing")
+    if not mobile_number:
+        abort(400, "mobileNumber is missing")
     
     if not password:
         abort(400, "password is missing")
@@ -71,20 +95,23 @@ def register():
 
     try:
         cursor.execute(
-            'INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id', (username, password)
+            'INSERT INTO users (mobileNumber, password) VALUES (%s, %s) RETURNING id', (mobile_number, password)
             )
         user_id = cursor.fetchone()[0]
         conn.commit()
     except psycopg2.errors.UniqueViolation:
         conn.rollback()
-        return jsonify({"error": "Username already taken"}), 400
+        return jsonify({"error": "mobileNumber already taken"}), 400
     finally:
         cursor.close()
         conn.close()
+
+    otp = generate_OTP()
+    send_otp(f"+91{mobile_number}", otp)
     
     return jsonify({
         'id': user_id,
-        'username': username
+        'mobileNumber': mobile_number
     }), 201
 
 

@@ -56,7 +56,7 @@ def create_table():
     cursor.close()
     conn.close()
 
-create_table()
+# create_table()
 
 def delete_table():
     conn = get_db_connection()
@@ -70,7 +70,7 @@ def delete_table():
     cursor.close()
     conn.close()
 
-# delete_table()
+delete_table()
 
 # MARK: - User registration 
 
@@ -189,4 +189,5 @@ def handle_400(e):
 
 @auth_bp.errorhandler(Exception)
 def handle_exception(e):
-    return jsonify({"error": "Internal server error"}), 500
+    print(e)
+    return jsonify({"error": "Internal server error", "error message": f"{e}"}), 500

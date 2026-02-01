@@ -93,6 +93,9 @@ def register():
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    otp = generate_OTP()
+    send_otp(f"+91{mobile_number}", otp)
+
     try:
         cursor.execute(
             'INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id', (mobile_number, password)
@@ -105,9 +108,6 @@ def register():
     finally:
         cursor.close()
         conn.close()
-
-    otp = generate_OTP()
-    send_otp(f"+91{mobile_number}", otp)
     
     return jsonify({
         'id': user_id,
